@@ -6,7 +6,7 @@
 <!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
     <head>
         <meta charset="utf-8">
-        <title>Operator-Pending Mappings / Learn Vimscript the Hard Way</title>
+        <title>Operator-Pending映射 / Learn Vimscript the Hard Way</title>
         <meta name="description" content="">
         <meta name="author" content="Steve Losh">
         <!--[if lt IE 9]>
@@ -34,10 +34,10 @@
             
     <section class="nav three columns">
         
-<ul><li><a href="#operator-pending-mappings">Operator-Pending Mappings</a><ul><li><a href="#movement-mappings">Movement Mappings</a></li>
-<li><a href="#changing-the-start">Changing the Start</a></li>
-<li><a href="#general-rules">General Rules</a></li>
-<li><a href="#exercises">Exercises</a></li>
+<ul><li><a href="#operator-pending">Operator-Pending映射</a><ul><li><a href="#movement">Movement映射</a></li>
+<li><a href="#_1">改变开始位置</a></li>
+<li><a href="#_2">一般规则</a></li>
+<li><a href="#_3">练习</a></li>
 </ul></li>
 </ul>
 
@@ -53,51 +53,38 @@
 
     <section class="content twelve columns offset-by-one">
         <div> 
-<h1 id="operator-pending-mappings">Operator-Pending Mappings</h1>
-<p>In this chapter we're going to explore one more rabbit hole in Vim's mapping
-system: "operator-pending mappings".  Let's step back for a second and make sure
-we're clear on vocabulary.</p>
-<p>An operator is a command that waits for you to enter a movement command, and
-then does something on the text between where you currently are and where the
-movement would take you.</p>
-<p>Some examples of operators are <code>d</code>, <code>y</code>, and <code>c</code>.  For example:</p>
-<pre class="codehilite"><code class="language-text">Keys   Operator   Movement
+<h1 id="operator-pending">Operator-Pending映射</h1>
+<p>这一章我们将来探索Vim映射系统中另外一个神奇的部分：“Operator-Pending映射”。开始之前，我们先解释下这里面的几个词含义。</p>
+<p>一个Operator（操作）就是一个命令，你可以在这个命令的后面输入一个Movement（移动）命令，然后Vim开始对文本执行前面的操作命令，这个操作命令会从你当前所在的位置开始执行，一直到这个移动命令会把你带到的位置结束。</p>
+<p>常用到的Operator有<code>d</code>，<code>y</code>和<code>c</code>。例如：</p>
+<pre class="codehilite"><code class="language-text">按键   操作       移动
 ----   --------   -------------
-dw     Delete     to next word
-ci(    Change     inside parens
-yt,    Yank       until comma</code></pre>
+dw     删除       到下一个单词
+ci(    修改       在括号内
+yt,    复制       到逗号</code></pre>
 
 
-<h2 id="movement-mappings">Movement Mappings</h2>
-<p>Vim lets you create new movements that work with all existing commands.  Run the
-following command:</p>
+<h2 id="movement">Movement映射</h2>
+<p>Vim允许你创建任何新的movements，这些movements可以跟所有命令一起工作。执行下面的命令：</p>
 <pre class="codehilite"><code class="language-vim">:onoremap p i(</code></pre>
 
 
-<p>Now type the following text into a buffer:</p>
+<p>在缓冲区中输入下面的文字：</p>
 <pre class="codehilite"><code class="language-text">return person.get_pets(type="cat", fluffy_only=True)</code></pre>
 
 
-<p>Put your cursor on the word "cat" and type <code>dp</code>.  What happened?  Vim deleted
-all the text inside the parentheses.  You can think of this new movement as
-"parameters".</p>
-<p>The <code>onoremap</code> command tells Vim that when it's waiting for a movement to give
-to an operator and it sees <code>p</code>, it should treat it like <code>i(</code>.  When we ran <code>dp</code>
-it was like saying "delete parameters", which Vim translates to "delete inside
-parentheses".</p>
-<p>We can use this new mapping immediately with all operators.  Type the same text
-as before into the buffer (or simply undo the change):</p>
+<p>把光标放到单词“cat”上，然后敲击<code>dp</code>。结果会发生什么？Vim会删除括号内的所有文字。你可以把这个新建的movements当作“参数”。</p>
+<p><code>onoremap</code>命令会告诉Vim当它在等待一个要附加在operator后面的movement的时候，如果这个movement是<code>p</code>的话，它会把它当作<code>i(</code>。所以当我们在运行<code>dp</code>的时候，就象是在对Vim说“delete parameters”，而Vim会把它理解为“在括号内删除”。</p>
+<p>我们现在可以立马对所有的operators使用这个新建的映射。再次在缓冲区中输入上面的文字（或者直接把之前修改恢复一下）。</p>
 <pre class="codehilite"><code class="language-text">return person.get_pets(type="cat", fluffy_only=True)</code></pre>
 
 
-<p>Put your cursor on the word "cat" and type <code>cp</code>.  What happened?  Vim deleted
-all the text inside the parentheses, but this time it left you in insert mode
-because you used "change" instead of "delete".</p>
-<p>Let's try another example.  Run the following command:</p>
+<p>把光标放到单词“cat”上，然后敲击<code>cp</code>。这次又会发生什么？Vim会删除括号中的所有文字，不过这一次删除之后Vim会处于插入模式，这是因为你使用的是“change”，而不是“delete”。</p>
+<p>再看一个示例。执行下面的命令：</p>
 <pre class="codehilite"><code class="language-vim">:onoremap b /return&lt;cr&gt;</code></pre>
 
 
-<p>Now type the following text into a buffer:</p>
+<p>现在把下面的文字输入到缓冲区：</p>
 <pre class="codehilite"><code class="language-python">def count(i):
     i += 1
     print i
@@ -105,75 +92,54 @@ because you used "change" instead of "delete".</p>
     return foo</code></pre>
 
 
-<p>Put your cursor on the <code>i</code> in the second line and press <code>db</code>.  What happened?
-Vim deleted the entire body of the function, all the way up until the <code>return</code>,
-which our mapping used Vim's normal search to find.</p>
-<p>When you're trying to think about how to define a new operator-pending movement,
-you can think of it like this:</p>
-<ol><li>Start at the cursor position.</li>
-<li>Enter visual mode (charwise).</li>
-<li>... mapping keys go here ...</li>
-<li>All the text you want to include in the movement should now be selected.</li>
-</ol><p>It's your job to fill in step three with the appropriate keys.</p>
-<h2 id="changing-the-start">Changing the Start</h2>
-<p>You may have already seen a problem in what we've learned so far.  If our
-movements always have to start at the current cursor position it limits what we
-can do.</p>
-<p>Vim isn't in the habit of limiting what you can do, so of course there's a way
-around this problem.  Run the following command:</p>
+<p>把光标放到第二行的<code>i</code>上，然后按下<code>db</code>。会发生生么？Vim把整个函数体中直到<code>return</code>上面的内容都删除了，<code>return</code>就是上面的映射使用Vim的通用查找得到的结果。</p>
+<p>当你想搞清楚怎么定义一个新的operator-pending movement的时候，你可以从下面几个步骤来思考：</p>
+<ol><li>在光标所在的位置开始。</li>
+<li>进入可视模式(charwise)。</li>
+<li>... 把映射的按键放到这里 ...</li>
+<li>所有你想包含在movement中的文字都会被选中。</li>
+</ol><p>你所要做的工作就是在第三步中填上合适的按键。</p>
+<h2 id="_1">改变开始位置</h2>
+<p>你可能已经从上面所学的东西中意识到一个了问题。如果我们定义的movements都是从光标所在的位置开始的话，那么这就会限制我们做一些我们想使用movement来做的事情。</p>
+<p>但是Vim并不会限制你去做你想做的事情，所以对于这个问题肯定有解决办法。执行下面的命令：</p>
 <pre class="codehilite"><code class="language-vim">:onoremap in( :&lt;c-u&gt;normal! f(vi(&lt;cr&gt;</code></pre>
 
 
-<p>This might look frightening, but let's try it out.  Enter the following text
-into the buffer:</p>
+<p>这个命令看起来有些复杂，不过我们还是先试试它能干什么。将下面的文字输入缓冲区：</p>
 <pre class="codehilite"><code class="language-python">print foo(bar)</code></pre>
 
 
-<p>Put your cursor somewhere in the word <code>print</code> and type <code>cin(</code>.  Vim will delete
-the contents of the parentheses and place you in insert mode between them.</p>
-<p>You can think of this mapping as meaning "inside next parentheses", and it will
-perform the operator on the text inside the next set of parentheses on the
-current line.</p>
-<p>Let's make a companion "inside last parentheses" ("previous" would be a better
-word, but it would shadow the "paragraph" movement).  Run the following command:</p>
+<p>把光标放到单词<code>print</code>上面，然后敲击<code>cin(</code>。Vim会删除括号内的内容然后进入插入模式，并且光标会停留在括号的中间。</p>
+<p>你可以将这个映射理解为“在下一个括号内(inside next parentheses)”。它会对当前行光标所在位置的下一个括号内的文本执行operator。</p>
+<p>我们再创建一个“在上一个括号内(inside last parentheses)”的movement进行对照。（在这里使用“前一个(previous)“可能更准确，但这会覆盖“段落(paragraph)”movement）</p>
 <pre class="codehilite"><code class="language-vim">:onoremap il( :&lt;c-u&gt;normal! F)vi(&lt;cr&gt;</code></pre>
 
 
-<p>Try it out on some text of your own to make sure it works.</p>
-<p>So how do these mappings work?  First, the <code>&lt;c-u&gt;</code> is something special that you
-can ignore for now -- just trust me that it needs to be there to make the
-mappings work in all cases.  If we remove that we're left with:</p>
+<p>先试试确保这个命令可以工作。</p>
+<p>那么这些映射是怎么工作的呢？首先，<code>&lt;c-u&gt;</code>比较特殊，可以先不用管（你只需要相信我这个东西可以让这个映射在任何情况下都能正常工作）。如果我们删除它的话，这个映射会变成这个样子：</p>
 <pre class="codehilite"><code class="language-vim">:normal! F)vi(&lt;cr&gt;</code></pre>
 
 
-<p><code>:normal!</code> is something we'll talk about in a later chapter, but for now it's
-enough to know that it is a command used to simulate pressing keys in normal
-mode.  For example, running <code>:normal! dddd</code> will delete two lines, just like
-pressing <code>dddd</code>.  The <code>&lt;cr&gt;</code> at the end of the mapping is what executes the
-<code>:normal!</code> command.</p>
-<p>So now we know that the mapping is essentially just running the last block of
-keys:</p>
+<p><code>:normal!</code>会在后面的章节谈到，现在你只需要知道它可以在常用模式下模拟按下按键。例如，运行
+<code>:normal! dddd</code>会删除两行，就像按下<code>dddd</code>。映射后面的<code>&lt;cr&gt;</code>是用来执行<code>:normal!</code>命令的。</p>
+<p>那么现在我们可以认为这个映射的关键是运行下面这些按键组成的命令：</p>
 <pre class="codehilite"><code class="language-vim">F)vi(</code></pre>
 
 
-<p>This is fairly simple:</p>
-<ul><li><code>F)</code>: Move backwards to the nearest <code>)</code> character.</li>
-<li><code>vi(</code>: Visually select inside the parentheses.</li>
-</ul><p>We end up with the text we want to operate on visually selected, and Vim
-performs the operation on it as normal.</p>
-<h2 id="general-rules">General Rules</h2>
-<p>A good way to keep the multiple ways of creating operator-pending mappings
-straight is the remember the following two rules:</p>
-<ul><li>If your operator-pending mapping ends with some text visually selected, Vim
-  will operate on that text.</li>
-<li>Otherwise, Vim will operate on the text between the original cursor position
-  and the new position.</li>
-</ul><h2 id="exercises">Exercises</h2>
-<p>Create operator-pending mappings for "around next parentheses" and "around last
-parentheses".</p>
-<p>Create similar mappings for in/around next/last for curly brackets.</p>
-<p>Read <code>:help omap-info</code> and see if you can puzzle out what the <code>&lt;c-u&gt;</code> in the
-examples is for.</p></div>
+<p>This is fairly simple:
+这个命令很容易理解：</p>
+<ul><li><code>F)</code>: 向后移动到最近的<code>)</code>字符。</li>
+<li><code>vi(</code>: 进入可视模式选择括号内的所有内容。</li>
+</ul><p>这个movement结束在在可视模式下选择中我们想操作的文本，然后Vim会对选中的文本执行操作，就像通常情况一样。</p>
+<h2 id="_2">一般规则</h2>
+<p>下面两条规则可以让你可以很直观的以多种方式创建operator-pending映射：</p>
+<ul><li>如果你的operator-pending映射以在可视模式下选中文本结束，Vim会操作这些文本。</li>
+<li>否则，Vim会操作从光标的原始位置到一个新位置之间的文本。</li>
+</ul><h2 id="_3">练习</h2>
+<p>为"around next parentheses"和"around last
+parentheses"创建operator-pending映射</p>
+<p>为打括号创建类似的in/around next/last的mappings。</p>
+<p>阅读<code>:help omap-info</code>，看看你可不可以搞清楚<code>&lt;c-u&gt;</code>是干啥的。</p></div>
 
         <div class="prevnext">
             

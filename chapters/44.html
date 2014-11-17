@@ -6,7 +6,7 @@
 <!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
     <head>
         <meta charset="utf-8">
-        <title>Detecting Filetypes / Learn Vimscript the Hard Way</title>
+        <title>检测文件类型 / Learn Vimscript the Hard Way</title>
         <meta name="description" content="">
         <meta name="author" content="Steve Losh">
         <!--[if lt IE 9]>
@@ -34,8 +34,8 @@
             
     <section class="nav three columns">
         
-<ul><li><a href="#detecting-filetypes">Detecting Filetypes</a><ul><li><a href="#detecting-potion-files">Detecting Potion Files</a></li>
-<li><a href="#exercises">Exercises</a></li>
+<ul><li><a href="#_1">检测文件类型</a><ul><li><a href="#potion">检测Potion文件</a></li>
+<li><a href="#_2">练习</a></li>
 </ul></li>
 </ul>
 
@@ -51,10 +51,8 @@
 
     <section class="content twelve columns offset-by-one">
         <div> 
-<h1 id="detecting-filetypes">Detecting Filetypes</h1>
-<p>Let's create a Potion file we can use as a sample as we're working on our
-plugin.  Create a <code>factorial.pn</code> file somewhere and put the following Potion
-code inside it:</p>
+<h1 id="_1">检测文件类型</h1>
+<p>让我们创建一个Potion文件作为插件的测试样本。</p>
 <pre class="codehilite"><code class="language-text">factorial = (n):
     total = 1
     n to 1 (i):
@@ -68,9 +66,8 @@ code inside it:</p>
     "\n" print.</code></pre>
 
 
-<p>This code creates a simple factorial function and calls it ten times, printing
-the results each time.  Go ahead and run it with <code>potion factorial.pn</code>.  The
-output should look like this:</p>
+<p>这个代码创建了一个简单的阶乘函数并调用它10次，逐次输出结果。继续前进并用<code>potion factorial.pn</code>执行它。
+输出结果应该像这样：</p>
 <pre class="codehilite"><code class="language-text">0! is: 0
 1! is: 1
 2! is: 2
@@ -83,43 +80,34 @@ output should look like this:</p>
 9! is: 362880</code></pre>
 
 
-<p>If you don't get this output, or you get an error, stop and figure out what's
-gone wrong.  The code should work exactly as-is.</p>
-<p>Take some time to understand how the code works.  Refer to the Potion docs
-liberally.  It's not critical to understanding Vimscript but it will make you
-a better programmer.</p>
-<h2 id="detecting-potion-files">Detecting Potion Files</h2>
-<p>Open <code>factorial.pn</code> in Vim and run the following command:</p>
+<p>如果你得不到这个输出，或者你得到一个错误，停下来并排查问题所在。
+这个代码应该会正常工作的。</p>
+<p>这跟学习Vimscript没有关系，不过它能让你成为更好的程序猿。</p>
+<h2 id="potion">检测Potion文件</h2>
+<p>用Vim打开<code>factorial.pn</code>并执行下面命令：</p>
 <pre class="codehilite"><code class="language-vim">:set filetype?</code></pre>
 
 
-<p>Vim will display <code>filetype=</code> because it doesn't know what a <code>.pn</code> file is yet.
-Let's fix that.</p>
-<p>Create <code>ftdetect/potion.vim</code> in your plugin's repo.  Put the following lines
-into it:</p>
+<p>Vim将显示<code>filetype=</code>，因为它还不认识<code>.pn</code>文件。让我们解决这个问题。</p>
+<p>在你的插件的repo中创建<code>ftdetect/potion.vim</code>。在它里面加入下面几行：</p>
 <pre class="codehilite"><code class="language-vim">au BufNewFile,BufRead *.pn set filetype=potion</code></pre>
 
 
-<p>This creates a single autocommand: a command to set the filetype of <code>.pn</code> files
-to <code>potion</code>.  Pretty straightforward.</p>
-<p>Notice that we <em>didn't</em> use an autocommand group like we usually would.  Vim
-automatically wraps the contents of <code>ftdetect/*.vim</code> files in autocommand groups
-for you, so you don't need to worry about it.</p>
-<p>Close the <code>factorial.pn</code> file and reopen it.  Now run the previous command
-again:</p>
+<p>这创建了一个单行自动命令：一个设置<code>.pn</code>文件的filetype为<code>potion</code>的命令。很简明吧。</p>
+<p>注意我们<em>没有</em>像之前经常做的那样使用一个自动命令组。
+Vim自动替你把<code>ftdetect/*.vim</code>文件包装成自动命令组，所以你不需要操心。</p>
+<p>关闭<code>factorial.pn</code>并重新打开它。现在再执行前面的命令：</p>
 <pre class="codehilite"><code class="language-vim">:set filetype?</code></pre>
 
 
-<p>This time Vim displays <code>filetype=potion</code>.  When Vim started up it loaded the
-autocommand group inside <code>~/.vim/bundle/potion/ftdetect/potion.vim</code>, and when it
-opened <code>factorial.pn</code> the autocommand fired, setting the <code>filetype</code> to <code>potion</code>.</p>
-<p>Now that we've taught Vim to recognize Potion files we can move on to actually
-creating some useful behavior in our plugin.</p>
-<h2 id="exercises">Exercises</h2>
-<p>Read <code>:help ft</code>.  Don't worry if you don't understand everything there.</p>
-<p>Read <code>:help setfiletype</code>.</p>
-<p>Modify the Potion plugin's <code>ftdetect/potion.vim</code> script to use <code>setfiletype</code>
-instead of <code>set filetype</code>.</p></div>
+<p>这次Vim显示<code>filetype=potion</code>。当Vim启动时，它加载<code>~/.vim/bundle/potion/ftdetect/potion.vim</code>里的自动命令组，
+而当它打开<code>factorial.pn</code>时，自动命令起效，设置<code>filetype</code>为<code>potion</code>。</p>
+<p>既然已经让Vim识别了Potion文件，我们可以继续前进来做些有用的东西了。</p>
+<h2 id="_2">练习</h2>
+<p>阅读<code>:help ft</code>。不要担心你看不懂里面的内容。</p>
+<p>阅读<code>:help setfiletype</code>。</p>
+<p>修改Potion插件中的<code>ftdetect/potion.vim</code>。
+用<code>setfiletype</code>代替<code>set filetype</code>。</p></div>
 
         <div class="prevnext">
             

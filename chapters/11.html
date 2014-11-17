@@ -74,10 +74,10 @@
 <p>当你在<code>bar</code>文件下敲击<code>&lt;leader&gt;x</code>，Vim找不到一个跟它匹配的映射，它将会被解析了两个命令：<code>&lt;leader&gt;</code>（这个什么都不会干）和 <code>x</code>（通常会删除一个字符）。 </p>
 <h2 id="leader">本地Leader</h2>
 <p>在这个例子中，<code>&lt;leader&gt;x</code>是一个本地缓冲区映射，不过这种定义方式并不合适。如果我们需要设定一个只会用于特定缓冲区的映射，一般会使用<code>&lt;localleader&gt;</code>，而不是<code>&lt;leader&gt;</code>。</p>
-<p>使用两种不同的leader按键就像设置了一种命名空间，这会帮助你保证所有不同的映射更加对你而言更加清晰直接。</p>
+<p>使用两种不同的leader按键就像设置了一种命名空间，这会帮助你保证所有不同的映射对你而言更加清晰直接。</p>
 <p>但你在编写一个会被其他人用到的插件的时候，这点显得尤其重要。使用<code>&lt;localleader&gt;</code>来设置本地映射会防止你的插件覆盖别人用<code>&lt;leader&gt;</code>设置的全局映射，因为他们可能已经对他们做设置的全局映射非常之习惯了。</p>
 <h2 id="_3">设置</h2>
-<p>在这本书的前面几个章节里，我们谈论了使用<code>set</code>来设置选项。有一些选项总是会适用于整个Vim，当时有些选项可以基于缓冲区进行设置。</p>
+<p>在这本书的前面几个章节里，我们谈论了使用<code>set</code>来设置选项。有一些选项总是会适用于整个Vim，但是有些选项可以基于缓冲区进行设置。</p>
 <p>切回到文件<code>foo</code>，执行下面的命令： </p>
 <pre class="codehilite"><code class="language-vim">:setlocal wrap</code></pre>
 

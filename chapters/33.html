@@ -6,7 +6,7 @@
 <!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
     <head>
         <meta charset="utf-8">
-        <title>Case Study: Grep Operator, Part Two / Learn Vimscript the Hard Way</title>
+        <title>实例研究：Grep运算符(Operator)，第二部分 / Learn Vimscript the Hard Way</title>
         <meta name="description" content="">
         <meta name="author" content="Steve Losh">
         <!--[if lt IE 9]>
@@ -34,14 +34,14 @@
             
     <section class="nav three columns">
         
-<ul><li><a href="#case-study-grep-operator-part-two">Case Study: Grep Operator, Part Two</a><ul><li><a href="#create-a-file">Create a File</a></li>
-<li><a href="#skeleton">Skeleton</a></li>
-<li><a href="#visual-mode">Visual Mode</a></li>
-<li><a href="#motion-types">Motion Types</a></li>
-<li><a href="#copying-the-text">Copying the Text</a></li>
-<li><a href="#escaping-the-search-term">Escaping the Search Term</a></li>
-<li><a href="#running-grep">Running Grep</a></li>
-<li><a href="#exercises">Exercises</a></li>
+<ul><li><a href="#grepoperator">实例研究：Grep运算符(Operator)，第二部分</a><ul><li><a href="#_1">新建一个文件</a></li>
+<li><a href="#skeleton">骨架(Skeleton)</a></li>
+<li><a href="#_2">可视模式</a></li>
+<li><a href="#_3">动作类型</a></li>
+<li><a href="#_4">复制文本</a></li>
+<li><a href="#_5">转义搜索文本</a></li>
+<li><a href="#grep">执行Grep</a></li>
+<li><a href="#_6">练习</a></li>
 </ul></li>
 </ul>
 
@@ -57,34 +57,24 @@
 
     <section class="content twelve columns offset-by-one">
         <div> 
-<h1 id="case-study-grep-operator-part-two">Case Study: Grep Operator, Part Two</h1>
-<p>Now that we've got a preliminary sketch of our solution, it's time to flesh it
-out into something powerful.</p>
-<p>Remember: our original goal was to create a "grep operator".  There are a whole
-bunch of new things we need to cover to do this, but we're going to follow the
-same process we did in the last chapter: start with something simple and
-transform it until it does what you need.</p>
-<p>Before we start, comment out the mapping we creating the previous chapter from
-your <code>~/.vimrc</code> file -- we're going to use the same keystroke for our new
-operator.</p>
-<h2 id="create-a-file">Create a File</h2>
-<p>Creating an operator will take a number of commands and typing those out by
-hand will get tedious very quickly.  You could add it to your <code>~/.vimrc</code> file,
-but let's create a separate file just for this operator instead.  It's meaty
-enough to warrant a file of its own.</p>
-<p>First, find your Vim <code>plugin</code> directory.  On Linux or OS X this will be at
-<code>~/.vim/plugin</code>.  If you're on Windows it will be inside the <code>vimfiles</code>
-directory in your home directory. (Use the command: <code>:echo $HOME</code> in Vim if
-you're not sure where this is). If this directory doesn't exist, create it.</p>
-<p>Inside <code>plugin/</code> create a file named <code>grep-operator.vim</code>.  This is where you'll
-place the code for this new operator.  When you're editing the file you can run
-<code>:source %</code> to reload the code at any time.  This file will also be loaded each
-time you open Vim just like <code>~/.vimrc</code>.</p>
-<p>Remember that you <em>must</em> write the file before you source it for the changes to
-be seen!</p>
-<h2 id="skeleton">Skeleton</h2>
-<p>To create a new Vim operator you'll start with two components: a function and
-a mapping.  Start by adding the following code to <code>grep-operator.vim</code>:</p>
+<h1 id="grepoperator">实例研究：Grep运算符(Operator)，第二部分</h1>
+<p>目前为止，我们已经完成了一个原型，是时候扩充它，让它更加强大。</p>
+<p>记住：我们初始目标是创建"grep运算符"。我们还需要做一大堆新的东西来达成目标，
+但要像前一章的过程一样：从简单的东西开始，并逐步改进直到它满足我们的需求。</p>
+<p>在开始之前，注释掉<code>~/.vimrc</code>中在前一章创建的映射。我们还要用同样的快捷键来映射新的运算符。</p>
+<h2 id="_1">新建一个文件</h2>
+<p>创建一个新的运算符需要许多命令，把它们手工打出来将很快变成一种折磨。
+你可以把它附加到<code>~/.vimrc</code>，但让我们为这个运算符创建一个独立的文件。我们有足够的必要这么做。</p>
+<p>首先，找到你的Vim<code>plugin</code>文件夹。在Linux或OS X，这将会是<code>~/.vim/plugin</code>。
+如果你是Windows用户，它将位于你的主目录下的<code>vimfiles</code>文件夹。(如果你找不到，在Vim里使用`:echo $HOME命令)
+如果这个文件夹不存在，创建一个。</p>
+<p>在<code>plugin/</code>下新建文件<code>grep-operator.vim</code>。这就是你放置新运算符的代码的地方。
+一旦文件被修改，你可以执行<code>:source %</code>来重新加载代码。
+每次你打开Vim，这个文件也会被重新加载，就像<code>~/.vimrc</code>。</p>
+<p>不要忘了，在你source之前，你<em>必须</em>先保存文件，这样才能看到变化！</p>
+<h2 id="skeleton">骨架(Skeleton)</h2>
+<p>要创建一个新的Vim运算符，你需要从两个组件开始：一个函数还有一个映射。
+先添加下面的代码到<code>grep-operator.vim</code>:</p>
 <pre class="codehilite"><code class="language-vim">nnoremap &lt;leader&gt;g :set operatorfunc=GrepOperator&lt;cr&gt;g@
 
 function! GrepOperator(type)
@@ -92,42 +82,32 @@ function! GrepOperator(type)
 endfunction</code></pre>
 
 
-<p>Write the file and source it with <code>:source %</code>.  Try it out by pressing
-<code>&lt;leader&gt;giw</code> to say "grep inside word".  Vim will echo <code>Test</code> <em>after</em> accepting
-the <code>iw</code> motion, which means we've laid out the skeleton.</p>
-<p>The function is simple and nothing we haven't seen before, but that mapping is
-a bit more complicated.  First we set the <code>operatorfunc</code> option to our function,
-and then we run <code>g@</code> which calls this function as an operator.  This may seem
-a bit convoluted, but it's how Vim works.</p>
-<p>For now it's okay to consider this mapping to be black magic.  You can delve
-into the detailed documentation later.</p>
-<h2 id="visual-mode">Visual Mode</h2>
-<p>We've added the operator to normal mode, but we'll want to be able to use it
-from visual mode as well.  Add another mapping below the first:</p>
+<p>保存文件并用<code>:source %</code>source它。尝试通过按下<code>&lt;leader&gt;giw</code>来执行"grep整个词"。
+Vim将在接受<code>iw</code>动作(motion)后，输出<code>Test</code>，意味着我们已经搭起了骨架。</p>
+<p>函数部分是简单的，没有什么是我们没讲过的。不过映射部分比较复杂。
+我们首先对函数设置了<code>operatorfunc</code>选项，然后执行<code>g@</code>来以运算符的方式调用这个函数。
+看起来这有点绕，不过这就是Vim工作的原理。</p>
+<p>暂时把这个映射看作黑魔法吧。稍后你可以到文档里一探究竟。</p>
+<h2 id="_2">可视模式</h2>
+<p>我们已经在normal模式下加入了这个运算符，但还想要在visual模式下用到它。
+在之前的映射下面添加多一个：</p>
 <pre class="codehilite"><code class="language-vim">vnoremap &lt;leader&gt;g :&lt;c-u&gt;call GrepOperator(visualmode())&lt;cr&gt;</code></pre>
 
 
-<p>Write and source the file.  Now visually select something and press <code>&lt;leader&gt;g</code>.
-Nothing happens, but Vim does echo <code>Test</code>, so our function is getting called.</p>
-<p>We've seen the <code>&lt;c-u&gt;</code> in this mapping before but never explained what it did.
-Try visually selecting some text and pressing <code>:</code>.  Vim will open a command line
-as it usually does when <code>:</code> is pressed, but it automatically fills in <code>'&lt;,'&gt;</code> at
-the beginning of the line!</p>
-<p>Vim is trying to be helpful and inserts this text to make the command you're
-about to run function on the visually selected range.  In this case, however, we
-don't want the help.  We use <code>&lt;c-u&gt;</code> to say "delete from the cursor to the
-beginning of the line", removing the text.  This leaves us with a bare <code>:</code>,
-ready for the <code>call</code> command.</p>
-<p>The <code>call GrepOperator()</code> is simply a function call like we've seen before, but
-the <code>visualmode()</code> we're passing as an argument is new.  This function is
-a built-in Vim function that returns a one-character string representing the
-last type of visual mode used: <code>"v"</code> for characterwise, <code>"V"</code> for
-linewise, and a <code>Ctrl-v</code> character for blockwise.</p>
-<h2 id="motion-types">Motion Types</h2>
-<p>The function we defined takes a <code>type</code> argument.  We know that when we use the
-operator from visual mode it will be the result of <code>visualmode()</code>, but what
-about when we run it as an operator from normal mode?</p>
-<p>Edit the function body so the file looks like this:</p>
+<p>保存并source文件。现在在visual模式下选择一些东西并按下<code>&lt;leader&gt;g</code>。
+什么也没发生，但Vim确实输出了<code>Test</code>，所以我们的函数已经运行了。</p>
+<p>之前我们就见过<code>&lt;c-u&gt;</code>，但是还没有解释它是做什么的。试一下在可视模式下选中一些文本并按下<code>:</code>。
+Vim将打开一个命令行就像平时按下了<code>:</code>一样，但是命令行的开头自动添加了<code>'&lt;,'&gt;</code>！</p>
+<p>Vim为了提高效率，插入了这些文本来让你的命令在被选择的范围内执行。
+但是这次，我们不需要它添倒忙。我们用<code>&lt;c-u&gt;</code>来执行"从光标所在处删除到行首的内容"，移除多余文本。
+最后剩下一个孤零零的<code>:</code>，为调用<code>call</code>命令作准备。</p>
+<p>我们传递过去的<code>visualMode()</code>参数还没有讲过呢。
+这个函数是Vim的内置函数，它返回一个单字符的字符串来表示visual模式的类型：
+<code>"v"</code>代表字符宽度(characterwise)，<code>"V"</code>代表行宽度(linewise)，<code>Ctrl-v</code>代表块宽度(blockwise)。</p>
+<h2 id="_3">动作类型</h2>
+<p>我们定义的函数接受一个<code>type</code>参数。我们知道在visual模式下它将会是<code>visualmode()</code>的返回值，
+但是在normal模式下呢？</p>
+<p>编辑函数体部分，让代码像这样：</p>
 <pre class="codehilite"><code class="language-vim">nnoremap &lt;leader&gt;g :set operatorfunc=GrepOperator&lt;cr&gt;g@
 vnoremap &lt;leader&gt;g :&lt;c-u&gt;call GrepOperator(visualmode())&lt;cr&gt;
 
@@ -136,21 +116,15 @@ function! GrepOperator(type)
 endfunction</code></pre>
 
 
-<p>Source the file, then go ahead and try it out in a variety of ways.  Some
-examples of the output you get are:</p>
-<ul><li>Pressing <code>viw&lt;leader&gt;g</code> echoes <code>v</code> because we were in characterwise visual
-  mode.</li>
-<li>Pressing <code>Vjj&lt;leader&gt;g</code> echoes <code>V</code> because we were in linewise visual mode.</li>
-<li>Pressing <code>&lt;leader&gt;giw</code> echoes <code>char</code> because we used a characterwise motion
-  with the operator.</li>
-<li>Pressing <code>&lt;leader&gt;gG</code> echoes <code>line</code> because we used a linewise motion with the
-  operator.</li>
-</ul><p>Now we know how we can tell the difference between motion types, which will be
-important when we select the text to search for.</p>
-<h2 id="copying-the-text">Copying the Text</h2>
-<p>Our function is going to need to somehow get access to the text the user wants
-to search for, and the easiest way to do that is to simply copy it.  Edit the
-function to look like this:</p>
+<p>Source文件，然后继续并用多种的方式测试它。你可能会得到类似下面的结果：</p>
+<ul><li>按下<code>viw&lt;leader&gt;g</code>显示<code>v</code>，因为我们处于字符宽度的visual模式。</li>
+<li>按下<code>Vjj&lt;leader&gt;g</code>显示<code>V</code>，因为我们处于行宽度的visual模式。</li>
+<li>按下<code>&lt;leader&gt;giw</code>显示<code>char</code>，因为我们在字符宽度的动作(characterwise motion)中使用该运算符。</li>
+<li>按下<code>&lt;leader&gt;gG</code>显示<code>line</code>，因为我们在行宽度的动作(linewise motion)中使用该运算符。</li>
+</ul><p>现在我们已经知道怎么区分不同种类的动作，这对于我们选择需要搜索的词是很重要的。</p>
+<h2 id="_4">复制文本</h2>
+<p>我们的函数将需要获取用户想要搜索的文本，而这样做最简单的方法就是复制它。
+把函数修改成这样：</p>
 <pre class="codehilite"><code class="language-vim">nnoremap &lt;leader&gt;g :set operatorfunc=GrepOperator&lt;cr&gt;g@
 vnoremap &lt;leader&gt;g :&lt;c-u&gt;call GrepOperator(visualmode())&lt;cr&gt;
 
@@ -167,40 +141,27 @@ function! GrepOperator(type)
 endfunction</code></pre>
 
 
-<p>Wow.  That's a lot of new stuff.  Try it out by pressing things like
-<code>&lt;leader&gt;giw</code>, <code>&lt;leader&gt;g2e</code> and <code>vi(&lt;leader&gt;g</code>.  Each time Vim will echo the
-text that the motion covers, so clearly we're making progress!</p>
-<p>Let's break this new code down one step at a time.  First we have an <code>if</code>
-statement that checks the <code>a:type</code> argument.  If the type is <code>'v'</code> it was called
-from characterwise visual mode, so we do something to copy the visually-selected
-text.</p>
-<p>Notice that we use the case-sensitive comparison <code>==#</code>.  If we used plain <code>==</code>
-and the user has <code>ignorecase</code> set it would match <code>"V"</code> as well, which is <em>not</em>
-what we want.  Code defensively!</p>
-<p>The second case of the <code>if</code> fires if the operator was called from normal mode
-using a characterwise motion.</p>
-<p>The final case simply returns.  We explicitly ignore the cases of
-linewise/blockwise visual mode and linewise/blockwise motions.  Grep doesn't
-search across lines by default, so having a newline in the search pattern
-doesn't make any sense!</p>
-<p>Each of our two <code>if</code> cases runs a <code>normal!</code> command that does two
-things:</p>
-<ul><li>Visually select the range of text we want by:<ul><li>Moving to mark at the beginning of the range.</li>
-<li>Entering characterwise visual mode.</li>
-<li>Moving to the mark at the end of the range.</li>
+<p>哇。好多新的东西啊。试试按下<code>&lt;leader&gt;giw</code>，<code>&lt;leader&gt;g2e</code>和<code>vi(&lt;leader&gt;g</code>看看。
+每次Vim都会输出动作所包括的文本，显然我们已经走上正道了！</p>
+<p>让我们把这段代码一步步分开来看。首先我们用<code>if</code>语句检查<code>a:type</code>参数。如果是<code>'v'</code>，
+它就是使用在字符宽度的visual模式下，所以我们复制了可视模式下的选中文本。</p>
+<p>注意我们使用大小写敏感比较<code>==#</code>。如果我们只用了<code>==</code>而用户设置<code>ignorecase</code>，
+<code>"V"</code>也会是匹配的，结果<em>不会</em>如我们所愿。重视防御性编程！</p>
+<p><code>if</code>语句的第二个分支则会拦住normal模式下使用字符宽度的动作。</p>
+<p>剩下的情况只是默默地退出。我们直接忽略行宽度/块宽度的visual模式和对应的动作类型。
+Grep默认情况下不会搜索多行文本，所以在搜索内容中夹杂着换行符是毫无意义的。</p>
+<p>我们每一个<code>if</code>分支都会执行<code>normal!</code>命令来做两件事：</p>
+<ul><li>在可视状态下选中我们想要的文本范围：<ul><li>先移动到范围开头，并标记</li>
+<li>进入字符宽度的visual模式</li>
+<li>移动到范围结尾的标记</li>
 </ul></li>
-<li>Yanking the visually selected text.</li>
-</ul><p>Don't worry about the specific marks for now.  You'll learn why they need to be
-different when you complete the exercises at the end of this chapter.</p>
-<p>The final line of the function echoes the variable <code>@@</code>.  Remember that
-variables starting with an <code>@</code> are registers.  <code>@@</code> is the "unnamed" register:
-the one that Vim places text into when you yank or delete without specify
-a particular register.</p>
-<p>In a nutshell: we select the text to search for, yank it, then echo the yanked
-text.</p>
-<h2 id="escaping-the-search-term">Escaping the Search Term</h2>
-<p>Now that we've got the text we need in a Vim string we can escape it like we did
-in the previous chapter.  Modify the <code>echom</code> command so it looks like this:</p>
+<li>复制可视状态下选中的文本。</li>
+</ul><p>先不要纠结于特殊标记方式。你将会在完成本章结尾的练习时学到为什么它们会不一样。</p>
+<p>函数的最后一行输出变量<code>@@</code>。不要忘了以<code>@</code>开头的变量是寄存器。<code>@@</code>是"未命名"(unnamed)寄存器：
+如果你在删除或复制文本时没有指定一个寄存器，Vim就会把文本放在这里。</p>
+<p>简明扼要地说：我们选中要搜索的文本，复制它，然后输出被复制的文本。</p>
+<h2 id="_5">转义搜索文本</h2>
+<p>既然得到了Vim字符串形式的需要的文本，我们可以像前一章一样将它转义。修改<code>echom</code>命令成这样：</p>
 <pre class="codehilite"><code class="language-vim">nnoremap &lt;leader&gt;g :set operatorfunc=GrepOperator&lt;cr&gt;g@
 vnoremap &lt;leader&gt;g :&lt;c-u&gt;call GrepOperator(visualmode())&lt;cr&gt;
 
@@ -217,12 +178,10 @@ function! GrepOperator(type)
 endfunction</code></pre>
 
 
-<p>Write and source the file and try it out by visually selecting some text with
-a special character in it and pressing <code>&lt;leader&gt;g</code>.  Vim will echo a version of
-the selected text suitable for passing to a shell command.</p>
-<h2 id="running-grep">Running Grep</h2>
-<p>We're finally ready to add the <code>grep!</code> command that will perform the actual
-search.  Replace the <code>echom</code> line so the code looks like this:</p>
+<p>保存并source文件，然后在可视模式下选中带特殊字符的文本，按下<code>&lt;leader&gt;g</code>。
+Vim显示一个被转义了的能安全地传递给shell命令的文本。</p>
+<h2 id="grep">执行Grep</h2>
+<p>我们终于可以加上<code>grep!</code>命令来实现真正的搜索。替换掉<code>echom</code>那一行，代码看起来就像这样：</p>
 <pre class="codehilite"><code class="language-vim">nnoremap &lt;leader&gt;g :set operatorfunc=GrepOperator&lt;cr&gt;g@
 vnoremap &lt;leader&gt;g :&lt;c-u&gt;call GrepOperator(visualmode())&lt;cr&gt;
 
@@ -240,24 +199,20 @@ function! GrepOperator(type)
 endfunction</code></pre>
 
 
-<p>This should look familiar.  We simply execute the <code>silent execute "grep! ..."</code>
-command we came up with in the last chapter.  It's even more readable here
-because we're not trying to stuff the entire thing into a <code>nnoremap</code> command!</p>
-<p>Write and source the file, then try it out and enjoy the fruits of your labor!</p>
-<p>Because we've defined a brand new Vim operator we can use it in a lot of
-different ways, such as:</p>
-<ul><li><code>viw&lt;leader&gt;g</code>: Visually select a word, then grep for it.</li>
-<li><code>&lt;leader&gt;g4w</code>: Grep for the next four words.</li>
-<li><code>&lt;leader&gt;gt;</code>: Grep until semicolon.</li>
-<li><code>&lt;leader&gt;gi[</code>: Grep inside square brackets.</li>
-</ul><p>This highlights one of the best things about Vim: its editing commands are like
-a language.  When you add a new verb it automatically works with (most of) the
-existing nouns and adjectives.</p>
-<h2 id="exercises">Exercises</h2>
-<p>Read <code>:help visualmode()</code>.</p>
-<p>Read <code>:help c_ctrl-u</code>.</p>
-<p>Read <code>:help operatorfunc</code>.</p>
-<p>Read <code>:help map-operator</code>.</p></div>
+<p>看起来眼熟吧。我们简单地执行上一章得到的<code>silent execute "grep! ..."</code>命令。
+由于我们不再把所有的代码塞进单个<code>nnoremap</code>命令里，现在代码甚至更加清晰易懂了！</p>
+<p>保存并source文件，然后尝试一下，享受自己辛勤劳动的成果吧！</p>
+<p>因为定义了一个全新的Vim运算符，现在我们可以在许多场景下使用它了，比如：</p>
+<ul><li><code>viw&lt;leader&gt;g</code>: 可视模式下选中一个词，然后grep它。 </li>
+<li><code>&lt;leader&gt;g4w</code>: Grep接下来的四个词。</li>
+<li><code>&lt;leader&gt;gt;</code>: Grep到分号为止的文本。</li>
+<li><code>&lt;leader&gt;gi[</code>: Grep方括号里的文本.</li>
+</ul><p>这里彰显了Vim的优越性：它的编辑命令就像一门语言。当你加入新的动词，它会自动地跟(大多数)现存的名词和形容词搭配起来。</p>
+<h2 id="_6">练习</h2>
+<p>阅读<code>:help visualmode()</code>。</p>
+<p>阅读<code>:help c_ctrl-u</code>。</p>
+<p>阅读<code>:help operatorfunc</code>。</p>
+<p>阅读<code>:help map-operator</code>。</p></div>
 
         <div class="prevnext">
             

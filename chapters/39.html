@@ -6,7 +6,7 @@
 <!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
     <head>
         <meta charset="utf-8">
-        <title>Functional Programming / Learn Vimscript the Hard Way</title>
+        <title>函数式编程 / Learn Vimscript the Hard Way</title>
         <meta name="description" content="">
         <meta name="author" content="Steve Losh">
         <!--[if lt IE 9]>
@@ -34,11 +34,11 @@
             
     <section class="nav three columns">
         
-<ul><li><a href="#functional-programming">Functional Programming</a><ul><li><a href="#immutable-data-structures">Immutable Data Structures</a></li>
-<li><a href="#functions-as-variables">Functions as Variables</a></li>
-<li><a href="#higher-order-functions">Higher-Order Functions</a></li>
-<li><a href="#performance">Performance</a></li>
-<li><a href="#exercises">Exercises</a></li>
+<ul><li><a href="#_1">函数式编程</a><ul><li><a href="#_2">不可变的数据结构</a></li>
+<li><a href="#_3">作为变量的函数</a></li>
+<li><a href="#_4">高阶函数</a></li>
+<li><a href="#_5">效率</a></li>
+<li><a href="#_6">练习</a></li>
 </ul></li>
 </ul>
 
@@ -54,25 +54,19 @@
 
     <section class="content twelve columns offset-by-one">
         <div> 
-<h1 id="functional-programming">Functional Programming</h1>
-<p>We're going to take a short break now to talk about a style of programming you
-may have heard of: <a href="https://secure.wikimedia.org/wikipedia/en/wiki/Functional_programming">functional programming</a>.</p>
-<p>If you've programmed in languages like Python, Ruby or Javascript, or
-<em>especially</em> Lisp, Scheme, Clojure or Haskell, you're probably familiar with the
-idea of using functions as variables and using data structures with immutable
-state.  If you've never done this before you can safely skip this chapter, but
-I'd encourage you to try it anyway and broaden your horizons!</p>
-<p>Vimscript has all the pieces necessary to program in a kind-of-functional style,
-but it's a bit clunky.  We can create a few helpers that will make it less
-painful though.</p>
-<p>Go ahead and create a <code>functional.vim</code> file somewhere so you don't have to keep
-typing everything over and over.  This file will be our scratchpad for this
-chapter.</p>
-<h2 id="immutable-data-structures">Immutable Data Structures</h2>
-<p>Unfortunately Vim doesn't have any immutable collections like Clojure's vectors
-and maps built-in, but by creating some helper functions we can fake it to some
-degree.</p>
-<p>Add the following function to your file:</p>
+<h1 id="_1">函数式编程</h1>
+<p>现在让我们小憩一下，聊一聊一种你可能听过的编程风格：<a href="https://secure.wikimedia.org/wikipedia/en/wiki/Functional_programming">函数式编程</a>。</p>
+<p>如果你用过Python，Ruby或Javascript，<em>甚或</em>Lisp，Scheme，Clojure或Haskell，
+你应该会觉得把函数作为变量类型，用不可变的状态作为数据结构是平常的事。
+如果你没用过，你可以放心地跳过这一章了，但我还是鼓励你找机会去试试并拓宽自己的视野。</p>
+<p>Vimscript具有使用函数式风格进行编程的潜力，不过会有点吃力。
+我们可以创建一些辅助函数来让这个过程少些痛苦。</p>
+<p>继续前进并创建<code>functional.vim</code>文件，这样你就不用反复地重新击打每一行代码。
+这个文件将会成为这一章的草稿本。</p>
+<h2 id="_2">不可变的数据结构</h2>
+<p>不幸的是，Vim没有类似于Clojure内置的vector和map那样的不可变集合，
+不过通过一些辅助函数，我们可以在一定程度上模拟出来。</p>
+<p>在你的文件加上下面的函数:</p>
 <pre class="codehilite"><code class="language-vim">function! Sorted(l)
     let new_list = deepcopy(a:l)
     call sort(new_list)
@@ -80,14 +74,12 @@ degree.</p>
 endfunction</code></pre>
 
 
-<p>Source and write the file, then run <code>:echo Sorted([3, 2, 4, 1])</code> to try it out.
-Vim echoes <code>[1, 2, 3, 4]</code>.</p>
-<p>How is this different from simply calling the built-in <code>sort()</code> function?  The
-key is the first line: <code>let new_list = deepcopy(a:l)</code>.  Vim's <code>sort()</code> sorts the
-list <em>in place</em>, so we first create a full copy of the list and sort <em>that</em> so
-the original list won't be changed.</p>
-<p>This prevents side effects and helps us write code that is easier to reason
-about and test.  Let's add a few more helper functions in this same style:</p>
+<p>保存并source文件，然后执行<code>:echo Sorted([3,2,4,1])</code>来试试看。
+Vim输出<code>[1,2,3,4]</code>。</p>
+<p>这跟调用内置的<code>sort()</code>函数有什么区别呢？关键在于第一行：<code>let new_list = deepcopy(a:l)</code>。
+Vim的<code>sort()</code><em>就地</em>重排列表，所以我们先创建一个列表的副本，并排序<em>副本</em>,
+这样原本的列表不会被改变。</p>
+<p>这样就避免了副作用，并帮助我们写出更容易推断和测试的代码。让我们加入更多同样风格的辅助函数：</p>
 <pre class="codehilite"><code class="language-vim">function! Reversed(l)
     let new_list = deepcopy(a:l)
     call reverse(new_list)
@@ -113,38 +105,29 @@ function! Pop(l, i)
 endfunction</code></pre>
 
 
-<p>Each of these functions is exactly the same except for the middle line and the
-arguments they take.  Source and write the file and try them out on a few lists.</p>
-<p><code>Reversed()</code> takes a list and returns a new list with the elements reversed.</p>
-<p><code>Append()</code> returns a new list with the given value appended to the end of the
-old one.</p>
-<p><code>Assoc()</code> (short for "associate") returns a new list, with the element at the
-given index replaced by the new value.</p>
-<p><code>Pop()</code> returns a new list with the element at the given index removed.</p>
-<h2 id="functions-as-variables">Functions as Variables</h2>
-<p>Vimscript supports using variables to store functions, but the syntax is a bit
-obtuse.  Run the following commands:</p>
+<p>除了中间的一行和它们接受的参数，每一个函数都是一样的。保存并source文件，在一些列表上试试它们。</p>
+<p><code>Reversed()</code>接受一个列表并返回一个新的倒置了元素的列表。</p>
+<p><code>Append()</code>返回一个在原列表的基础上增加了给定值的新列表。</p>
+<p><code>Assoc()</code>("associate"的缩写)返回一个给定索引上的元素被替换成新值的新列表。</p>
+<p><code>Pop()</code>返回一个给定索引上的元素被移除的新列表。</p>
+<h2 id="_3">作为变量的函数</h2>
+<p>Vimscript支持使用变量储存函数，但是相关的语法有点愚钝。执行下面的命令：</p>
 <pre class="codehilite"><code class="language-vim">:let Myfunc = function("Append")
 :echo Myfunc([1, 2], 3)</code></pre>
 
 
-<p>Vim will display <code>[1, 2, 3]</code> as expected.  Notice that the variable we used
-started with a capital letter.  If a Vimscript variable refers to a function it
-must start with a capital letter.</p>
-<p>Functions can be stored in lists just like any other kind of variable.  Run the
-following commands:</p>
+<p>Vim意料之中地显示<code>[1, 2, 3]</code>。注意我们使用的变量以大写字母开头。
+如果一个Vimscript变量要引用一个函数，它就要以大写字母开头。</p>
+<p>就像其他种类的变量，函数也可以储存在列表里。执行下面命令：</p>
 <pre class="codehilite"><code class="language-vim">:let funcs = [function("Append"), function("Pop")]
 :echo funcs[1](['a', 'b', 'c'], 1)</code></pre>
 
 
-<p>Vim displays <code>['a', 'c']</code>.  The <code>funcs</code> variable does <em>not</em> need to start with
-a capital letter because it's storing a list, not a function.  The contents of
-the list don't matter at all.</p>
-<h2 id="higher-order-functions">Higher-Order Functions</h2>
-<p>Let's create a few of the most commonly-used higher-order functions.  If you're
-not familiar with that term, higher-order functions are functions that take
-<em>other</em> functions and do something with them.</p>
-<p>We'll begin with the trusty <code>map</code> function.  Add this to your file:</p>
+<p>Vim显示<code>['a', 'c']</code>。<code>funcs</code>变量<em>不</em>需要以大写字母开头，因为它储存的是列表，而不是函数。
+列表的内容不会造成任何影响。</p>
+<h2 id="_4">高阶函数</h2>
+<p>让我们创建一些用途广泛的高阶函数。如果你需要解释，高阶函数就是接受<em>别的</em>函数并使用它们的函数。</p>
+<p>我们将从<code>map</code>函数开始。在你的文件中添加这个：</p>
 <pre class="codehilite"><code class="language-vim">function! Mapped(fn, l)
     let new_list = deepcopy(a:l)
     call map(new_list, string(a:fn) . '(v:val)')
@@ -152,21 +135,17 @@ not familiar with that term, higher-order functions are functions that take
 endfunction</code></pre>
 
 
-<p>Source and write the file, and try it out by running the following commands:</p>
+<p>保存并source文件，执行下面命令试试看：</p>
 <pre class="codehilite"><code class="language-vim">:let mylist = [[1, 2], [3, 4]]
 :echo Mapped(function("Reversed"), mylist)</code></pre>
 
 
-<p>Vim displays <code>[[2, 1], [4, 3]]</code>, which is the result of applying <code>Reversed()</code> to
-every element in the list.</p>
-<p>How does <code>Mapped()</code> work?  Once again we create a fresh list with <code>deepcopy()</code>,
-do something to it, and return the modified copy -- nothing new there.  The
-tricky part is the middle.</p>
-<p><code>Mapped()</code> takes two arguments: a funcref (Vim's term for "variable holding
-a function") and a list.  We use the built-in <code>map()</code> function to perform the
-actual work.  Read <code>:help map()</code> now to see how it works.</p>
-<p>Now we'll create a few other common higher-order functions.  Add the following
-to your file:</p>
+<p>Vim显示<code>[[2, 1], [4, 3]]</code>，正好是对列表中的每一个元素应用了<code>Reversed()</code>的结果。</p>
+<p><code>Mapped()</code>是如何起作用的？我们又一次用<code>deepcopy()</code>创建新的列表，修修改改，返回修改后的副本
+—— 没什么是新的。有门道的是中间的部分。</p>
+<p><code>Mapped()</code>接受两个参数：一个funcref("储存一个函数的变量"在Vim里的说法)和一个列表。
+我们使用内置的<code>map()</code>函数实现真正的工作。现在就阅读<code>:help map()</code>来看它怎么工作的。</p>
+<p>现在我们将创建一些通用的高阶函数。把下面的代码加入到你的文件：</p>
 <pre class="codehilite"><code class="language-vim">function! Filtered(fn, l)
     let new_list = deepcopy(a:l)
     call filter(new_list, string(a:fn) . '(v:val)')
@@ -174,17 +153,16 @@ to your file:</p>
 endfunction</code></pre>
 
 
-<p>Try <code>Filtered()</code> out with the following commands:</p>
+<p>用下面的命令尝试<code>Filtered()</code>：</p>
 <pre class="codehilite"><code class="language-vim">:let mylist = [[1, 2], [], ['foo'], []]
 :echo Filtered(function('len'), mylist)</code></pre>
 
 
-<p>Vim displays <code>[[1, 2], ['foo']]</code>.</p>
-<p><code>Filtered()</code> takes a predicate function and a list.  It returns a copy of the
-list that contains only the elements of the original where the result of calling
-the function on it is "truthy".  In this case we use the built-in <code>len()</code>
-function, so it filters out all the elements whose length is zero.</p>
-<p>Finally we'll create the counterpart to <code>Filtered()</code>:</p>
+<p>Vim显示<code>[[1, 2], ['foo']]</code>。</p>
+<p><code>Filtered()</code>接受一个谓词函数和一个列表。它返回一个列表的副本，
+而这个列表只包括将自身作为谓词函数的输入参数并返回真值的元素。
+这里我们使用了内置的<code>len()</code>，让它过滤掉所有长度为0的元素。</p>
+<p>最后我们创建了<code>Filtered()</code>的好基友(counterpart)：</p>
 <pre class="codehilite"><code class="language-vim">function! Removed(fn, l)
     let new_list = deepcopy(a:l)
     call filter(new_list, '!' . string(a:fn) . '(v:val)')
@@ -192,43 +170,35 @@ function, so it filters out all the elements whose length is zero.</p>
 endfunction</code></pre>
 
 
-<p>Try it out just like we did with <code>Filtered()</code>:</p>
+<p>像使用<code>Filtered()</code>一样试一下：</p>
 <pre class="codehilite"><code class="language-vim">:let mylist = [[1, 2], [], ['foo'], []]
 :echo Removed(function('len'), mylist)</code></pre>
 
 
-<p>Vim displays <code>[[], []]</code>.  <code>Removed()</code> is like <code>Filtered()</code> except it only keeps
-elements where the predicate function does <em>not</em> return something truthy.</p>
-<p>The only difference in the code is the single <code>'!' .</code> we added to the call
-command, which negates the result of the predicate.</p>
-<h2 id="performance">Performance</h2>
-<p>You might be thinking that copying lists all over the place is wasteful, since
-Vim has to constantly create new copies and garbage collect old ones.</p>
-<p>If so: you're right!  Vim's lists don't support the same kind of structural
-sharing as Clojure's vectors, so all those copy operations can be expensive.</p>
-<p>Sometimes this will matter.  If you're working with enormous lists, things can
-slow down.  In real life, though, you might be surprised at how little you'll
-actually notice the difference.</p>
-<p>Consider this: as I'm writing this chapter my Vim program is using about 80
-megabytes of memory (and I have a <em>lot</em> of plugins installed).  My laptop has
-8 <em>gigabytes</em> of memory in it.  Is the overhead of having a few copies of a list
-around really going to make a noticeable difference?  Of course that depends on
-the size of the list, but in most cases the answer will be "no".</p>
-<p>To contrast, my Firefox instance with five tabs open is currently using 1.22
-<em>gigabytes</em> of RAM.</p>
-<p>You'll need to use your own judgement about when this style of programming
-creates unacceptably bad performance.</p>
-<h2 id="exercises">Exercises</h2>
-<p>Read <code>:help sort()</code>.</p>
-<p>Read <code>:help reverse()</code>.</p>
-<p>Read <code>:help copy()</code>.</p>
-<p>Read <code>:help deepcopy()</code>.</p>
-<p>Read <code>:help map()</code> if you haven't already.</p>
-<p>Read <code>:help function()</code>.</p>
-<p>Modify <code>Assoc()</code>, <code>Pop()</code>, <code>Mapped()</code>, <code>Filtered()</code> and <code>Removed()</code> to support
-dictionaries.  You'll probably need <code>:help type()</code> for this.</p>
-<p>Implement <code>Reduced()</code>.</p>
-<p>Pour yourself a glass of your favorite drink.  This chapter was intense!</p></div>
+<p>Vim显示<code>[[], []]</code>。<code>Removed()</code>就像<code>Filtered()</code>，不过它只保留谓词函数返回<em>非</em>真值的元素。</p>
+<p>代码中的唯一不同在于调用命令前面的<code>'!' .</code>，它把谓词函数的结果取反。</p>
+<h2 id="_5">效率</h2>
+<p>考虑到Vim不得不持续地创建新的副本并垃圾回收旧的对象，你可能会认为不停地制造副本是种浪费。</p>
+<p>是的，你是对的！Vim的列表不像Clojure的vector那样支持结构共享(structural sharing)，
+所以这里所有的复制操作是昂贵的。</p>
+<p>有时这的确是个问题。如果你需要使用庞大的列表，程序就会因此变慢。
+在现实世界，你可能会吃惊地发现你几乎不会注意到其中的差别。</p>
+<p>想想看吧：当我正写下本章时，Vim占用了80M内存(而且我可是装了<em>一堆</em>插件)。
+我的笔记本总共有<em>8G</em>内存。有一些列表的副本被创建出来，这会造成可被察觉的不同吗？
+当然这取决于列表的大小，但在大多数情况下答案将会是"No"。</p>
+<p>作为比较，我的Firefox打开了五个tab，现在正饕餮着<em>1.22G</em>内存。</p>
+<p>你将需要自己判断，什么时候这种编程风格会导致不可接受的低效率。</p>
+<h2 id="_6">练习</h2>
+<p>阅读<code>:help sort()</code>。</p>
+<p>阅读<code>:help reverse()</code>。</p>
+<p>阅读<code>:help copy()</code>。</p>
+<p>阅读<code>:help deepcopy()</code>。</p>
+<p>阅读<code>:help map()</code>，如果你未曾读过。</p>
+<p>阅读<code>:help function()</code>。</p>
+<p>修改<code>Assoc()</code>, <code>Pop()</code>, <code>Mapped()</code>, <code>Filtered()</code>和<code>Removed()</code>来支持字典类型。
+你可能需要阅读<code>:help type()</code>来帮助自己。</p>
+<p>实现<code>Reduced()</code>。</p>
+<p>倒给自己一杯最喜欢的饮料。这一章真激烈(intense)！</p></div>
 
         <div class="prevnext">
             

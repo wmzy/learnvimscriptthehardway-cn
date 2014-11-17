@@ -6,7 +6,7 @@
 <!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
     <head>
         <meta charset="utf-8">
-        <title>Looping / Learn Vimscript the Hard Way</title>
+        <title>循环 / Learn Vimscript the Hard Way</title>
         <meta name="description" content="">
         <meta name="author" content="Steve Losh">
         <!--[if lt IE 9]>
@@ -34,9 +34,9 @@
             
     <section class="nav three columns">
         
-<ul><li><a href="#looping">Looping</a><ul><li><a href="#for-loops">For Loops</a></li>
-<li><a href="#while-loops">While Loops</a></li>
-<li><a href="#exercises">Exercises</a></li>
+<ul><li><a href="#_1">循环</a><ul><li><a href="#for">For循环</a></li>
+<li><a href="#while">While循环</a></li>
+<li><a href="#_2">练习</a></li>
 </ul></li>
 </ul>
 
@@ -52,17 +52,14 @@
 
     <section class="content twelve columns offset-by-one">
         <div> 
-<h1 id="looping">Looping</h1>
-<p>You might be surprised to realize that we've gone through thirty five chapters
-of a programming language book without even mentioning loops!  Vimscript offers
-so many other options for performing actions on text (<code>normal!</code>, etc) that loops
-aren't as necessary as they are in most other languages.</p>
-<p>Even so, you'll definitely need them some day, so now we'll take a look at the
-two main kinds of loops Vim supports.</p>
-<h2 id="for-loops">For Loops</h2>
-<p>The first kind of loop is the <code>for</code> loop.  This may seem odd if you're used to
-Java, C or Javascript <code>for</code> loops, but turns out to be quite elegant.  Run the
-following commands:</p>
+<h1 id="_1">循环</h1>
+<p>你可能会惊讶地发现，作为一本关于编程语言的书，在前35章里我们压根就没有提到循环！
+Vimscript提供了非常多的方式操作文本(比如，<code>normal!</code>)，
+因此循环并不像在其他大多数语言中的那么必要。</p>
+<p>即使如此，总有一天你会需要用到它的，所以现在让我们探讨Vim支持的两种主要的循环。</p>
+<h2 id="for">For循环</h2>
+<p>第一种循环是<code>for</code>循环。如果你习惯了Java,C或Javascript中的<code>for</code>循环，它看上去有点古怪。
+但是你会发现这种写法十分地优雅。执行下面的命令：</p>
 <pre class="codehilite"><code class="language-vim">:let c = 0
 
 :for i in [1, 2, 3, 4]
@@ -72,13 +69,12 @@ following commands:</p>
 :echom c</code></pre>
 
 
-<p>Vim displays <code>10</code>, which is the result of adding together each element in the
-list.  Vimscript <code>for</code> loops iterate over lists (or dictionaries, which we'll
-cover later).</p>
-<p>There's no equivalent to the C-style <code>for (int i = 0; i &lt; foo; i++)</code> loop form in
-Vimscript.  This might seem bad at first, but in practice you'll never miss it.</p>
-<h2 id="while-loops">While Loops</h2>
-<p>Vim also supports the classic <code>while</code> loop.  Run the following commands:</p>
+<p>Vim显示<code>10</code>，就是把列表中的每一个元素的加起来的结果。Vimscript的<code>for</code>循环遍历整个列表
+(或我们待会会提到的字典)。</p>
+<p>Vimscript中不存在C风格的<code>for (int i = 0; i &lt; foo; i++)</code>。这一开始可能难以适应，
+但一旦习惯你就不会再怀念C风格的for循环了。</p>
+<h2 id="while">While循环</h2>
+<p>Vim也支持经典的<code>while</code>循环。执行下面命令：</p>
 <pre class="codehilite"><code class="language-vim">:let c = 1
 :let total = 0
 
@@ -90,13 +86,11 @@ Vimscript.  This might seem bad at first, but in practice you'll never miss it.<
 :echom total</code></pre>
 
 
-<p>Once again Vim displays <code>10</code>.  This loop should be familiar to just about anyone
-who's programmed before, so we won't spend any time on it.  You won't use it
-very often.  Keep it in the back of your mind for the rare occasions that you
-want it.</p>
-<h2 id="exercises">Exercises</h2>
-<p>Read <code>:help for</code>.</p>
-<p>Read <code>:help while</code>.</p></div>
+<p>Vim再次显示<code>10</code>。几乎每一个程序猿都熟悉这个循环，所以我们不会浪费时间讲解。
+你将会很少用到它。铭记它以备不时之需。</p>
+<h2 id="_2">练习</h2>
+<p>阅读<code>:help for</code>.</p>
+<p>阅读<code>:help while</code>.</p></div>
 
         <div class="prevnext">
             

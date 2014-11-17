@@ -6,7 +6,7 @@
 <!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
     <head>
         <meta charset="utf-8">
-        <title>String Functions / Learn Vimscript the Hard Way</title>
+        <title>字符串函数 / Learn Vimscript the Hard Way</title>
         <meta name="description" content="">
         <meta name="author" content="Steve Losh">
         <!--[if lt IE 9]>
@@ -34,11 +34,11 @@
             
     <section class="nav three columns">
         
-<ul><li><a href="#string-functions">String Functions</a><ul><li><a href="#length">Length</a></li>
-<li><a href="#splitting">Splitting</a></li>
-<li><a href="#joining">Joining</a></li>
-<li><a href="#lower-and-upper-case">Lower and Upper Case</a></li>
-<li><a href="#exercises">Exercises</a></li>
+<ul><li><a href="#_1">字符串函数</a><ul><li><a href="#_2">长度</a></li>
+<li><a href="#_3">切割</a></li>
+<li><a href="#_4">连接</a></li>
+<li><a href="#_5">大小写转换</a></li>
+<li><a href="#_6">练习</a></li>
 </ul></li>
 </ul>
 
@@ -54,77 +54,60 @@
 
     <section class="content twelve columns offset-by-one">
         <div> 
-<h1 id="string-functions">String Functions</h1>
-<p>Vim has many built-in functions to manipulate strings.  In this chapter we'll
-look at a few of the most important ones.</p>
-<h2 id="length">Length</h2>
-<p>The first function we'll look at is <code>strlen</code>.  Run the following command:</p>
+<h1 id="_1">字符串函数</h1>
+<p>Vim有许多内置(built-in)函数来操作字符串。本章中我们将介绍一些最为重要的字符串函数。</p>
+<h2 id="_2">长度</h2>
+<p>第一个介绍的函数是<code>strlen</code>。执行下面的命令：</p>
 <pre class="codehilite"><code class="language-vim">:echom strlen("foo")</code></pre>
 
 
-<p>Vim displays <code>3</code>, which is the length of the string <code>"foo"</code>.  Now try the
-following command:</p>
+<p>Vim显示<code>3</code>，也即<code>"foo"</code>的长度。现在尝试下面的命令：</p>
 <pre class="codehilite"><code class="language-vim">:echom len("foo")</code></pre>
 
 
-<p>Vim once again displays <code>3</code>.  When used with Strings <code>len</code> and <code>strlen</code> have
-identical effects.  We'll come back to <code>len</code> later in the book.</p>
-<h2 id="splitting">Splitting</h2>
-<p>Run the following command (note that it's an <code>echo</code> and not an <code>echom</code>):</p>
+<p>Vim再一次显示<code>3</code>。对于字符串，<code>len</code>和<code>strlen</code>有同样的效果。在本书稍后的章节我们会回过头来探讨<code>len</code>。</p>
+<h2 id="_3">切割</h2>
+<p>执行下面的命令(注意是<code>echo</code>而不是<code>echom</code>)：</p>
 <pre class="codehilite"><code class="language-vim">:echo split("one two three")</code></pre>
 
 
-<p>Vim displays <code>['one', 'two', 'three']</code>.  The <code>split</code> function splits a String
-into a List.  We'll talk about Lists shortly, but for now don't worry too much
-about them.</p>
-<p>You can also tell Vim to use a separator other than "whitespace" for splitting.
-Run the following command:</p>
+<p>Vim显示<code>['one','two','three']</code>。<code>split</code>函数把字符串切割成列表。我们将简要介绍列表，
+但现在不要纠结于此。</p>
+<p>你也可以指定一个分隔符来代替"空白"。</p>
 <pre class="codehilite"><code class="language-vim">:echo split("one,two,three", ",")</code></pre>
 
 
-<p>Vim will once again display <code>['one', 'two', 'three']</code>, because the second
-argument to <code>split</code> tells it to split the string on the comma character instead
-of on whitespace.</p>
-<h2 id="joining">Joining</h2>
-<p>Not only can you split strings, you can also join them.  Run the following
-command:</p>
+<p>Vim再一次显示<code>['one','two','three']</code>，因为<code>split</code>的第二个参数是","，表示以","切割。</p>
+<h2 id="_4">连接</h2>
+<p>你不仅可以切割字符串，还可以连接它们。执行下面命令：</p>
 <pre class="codehilite"><code class="language-vim">:echo join(["foo", "bar"], "...")</code></pre>
 
 
-<p>Vim will display <code>foo...bar</code>.  Don't worry about the list syntax for now.</p>
-<p><code>split</code> and <code>join</code> can be paired to great effect.  Run the following command:</p>
+<p>Vim将显示<code>foo...bar</code>。暂时不要在意列表语法。</p>
+<p><code>split</code>和<code>join</code>可以合作无间。执行下面的命令：</p>
 <pre class="codehilite"><code class="language-vim">:echo join(split("foo bar"), ";")</code></pre>
 
 
-<p>Vim displays <code>foo;bar</code>.  First we split the string <code>"foo bar"</code> into a list, then
-we joined that list together using a semicolon as the separator.</p>
-<h2 id="lower-and-upper-case">Lower and Upper Case</h2>
-<p>Vim has two functions to change the case of Strings.  Run the following
-commands:</p>
+<p>Vim显示<code>foo;bar</code>。首先我们把<code>"foo bar"</code>切割成列表，接着用分号作为分隔符把列表连接成字符串。</p>
+<h2 id="_5">大小写转换</h2>
+<p>Vim有两个函数来转换字符串大小写。执行下面的命令：</p>
 <pre class="codehilite"><code class="language-vim">:echom tolower("Foo")
 :echom toupper("Foo")</code></pre>
 
 
-<p>Vim displays <code>foo</code> and <code>FOO</code>.  This should be pretty easy to understand.</p>
-<p>In many languages (like Python) a common idiom is to force strings to lowercase
-before comparing them to perform a case-insensitive comparison.  In Vimscript
-this isn't necessary because we have the case-insensitive comparison operators.
-Reread the chapter on comparisons if you don't remember those.</p>
-<p>It's up to you to decide whether to use <code>tolower</code> and <code>==#</code>, or just <code>==?</code> to
-perform case-sensitive comparisons.  There doesn't seem to be any strong
-preference in the Vimscript community.  Pick one and stick to it for all of your
-scripts.</p>
-<h2 id="exercises">Exercises</h2>
-<p>Run <code>:echo split('1   2')</code> and <code>:echo split('1,,,2', ',')</code>.  Do they behave the
-same?</p>
-<p>Read <code>:help split()</code>.</p>
-<p>Read <code>:help join()</code>.</p>
-<p>Read <code>:help functions</code> and skim the list of built-in functions for ones that
-mention the word "String".  Use the <code>/</code> command to make it easier (remember,
-Vim's help files can be navigated like any other kind of file).  There are
-a <em>lot</em> of functions here, so don't feel like you need to read the documentation
-for every single one.  Just try to get an idea of what's available if you need
-it in the future.</p></div>
+<p>Vim显示<code>foo</code>和<code>FOO</code>。这很浅显易懂吧。</p>
+<p>在许多语言(如Python)有一个惯例是在进行比较之前把字符串强制转换成小写来实现大小写无关的比较。
+在Vimscript里不需要这么做，因为有大小写不敏感的比较运算符。如果你回忆不起来，重新读关于比较的那一章。
+(译注：如果你回忆不起来，那是第22章)</p>
+<p>你可以自由选择使用<code>tolower</code>或<code>==#</code>以及<code>==?</code>来实现大小写敏感的比较。Vimscript社区对此还没有明显的偏好。
+选定一个并在你所有的脚本中保持一致。</p>
+<h2 id="_6">练习</h2>
+<p>执行<code>:echo split('1   2')</code>和<code>:echo split('1,,,2',',')</code>。它们表现一致吗？</p>
+<p>阅读<code>:help splt()</code>。</p>
+<p>阅读<code>:help join()</code>。</p>
+<p>阅读<code>:help functions</code>并浏览有关String的内置函数。使用<code>/</code>命令来辅助你(记住，Vim的帮助文件可以以一般文件的方式浏览)。
+这里有着<em>许多</em>函数，所以不要纠结于每一个函数的文档。给自己留下印象，以便于将来的不时之用，
+这就够了。</p></div>
 
         <div class="prevnext">
             

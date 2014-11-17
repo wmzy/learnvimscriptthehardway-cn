@@ -6,7 +6,7 @@
 <!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
     <head>
         <meta charset="utf-8">
-        <title>Paths / Learn Vimscript the Hard Way</title>
+        <title>路径 / Learn Vimscript the Hard Way</title>
         <meta name="description" content="">
         <meta name="author" content="Steve Losh">
         <!--[if lt IE 9]>
@@ -34,9 +34,9 @@
             
     <section class="nav three columns">
         
-<ul><li><a href="#paths">Paths</a><ul><li><a href="#absolute-paths">Absolute Paths</a></li>
-<li><a href="#listing-files">Listing Files</a></li>
-<li><a href="#exercises">Exercises</a></li>
+<ul><li><a href="#_1">路径</a><ul><li><a href="#_2">绝对路径</a></li>
+<li><a href="#_3">列出文件</a></li>
+<li><a href="#_4">练习</a></li>
 </ul></li>
 </ul>
 
@@ -52,64 +52,54 @@
 
     <section class="content twelve columns offset-by-one">
         <div> 
-<h1 id="paths">Paths</h1>
-<p>Vim is a text editor, and text editors (usually) work with text files.  Text
-files live on filesystems, and to specify files we use paths.  Vimscript has
-a few built-in utilities that can be extremely helpful when you need to work
-with paths.</p>
-<h2 id="absolute-paths">Absolute Paths</h2>
-<p>Sometimes it's handy to be able to get the absolute path of a certain file for
-use with external scripts.  Run the following commands:</p>
+<h1 id="_1">路径</h1>
+<p>Vim是一个文本编辑器，而文本编辑器(经常)处理文本文件。文本文件储存在文件系统中，
+而我们使用路径来描述文件。Vimscript有一些内置的方法会在你需要处理路径时帮上大忙。</p>
+<h2 id="_2">绝对路径</h2>
+<p>有时外部脚本也需要获取特定文件的绝对路径名。执行下面的命令：</p>
 <pre class="codehilite"><code class="language-vim">:echom expand('%')
 :echom expand('%:p')
 :echom fnamemodify('foo.txt', ':p')</code></pre>
 
 
-<p>The first command displays the relative path of whatever file you're currently
-editing.  <code>%</code> means "the current file".  Vim supports a bunch of other strings
-you can use with <code>expand()</code> as well.</p>
-<p>The second command displays the full, absolute path of that file.  The <code>:p</code> in
-the string tells Vim that you want the absolute path.  There are a ton of other
-modifiers you can use.</p>
-<p>The third command displays an absolute path to the file <code>foo.txt</code> in the current
-directory, regardless of whether that file actually exists.  <code>fnamemodify()</code> is
-a Vim function that's more flexible than <code>expand()</code> in that you can specify any
-file name, not just one of <code>expand()</code>'s special strings.</p>
-<h2 id="listing-files">Listing Files</h2>
-<p>You might also want to get a listing of files in a specific directory.  Run the
-following command:</p>
+<p>第一个命令显示我们正在编辑的文件的相对路径。<code>%</code>表示"当前文件"。
+Vim也支持其他一些字符串作为<code>expand()</code>的参数。</p>
+<p>第二个命令显示当前文件的完整的绝对路径名。字符串中的<code>:p</code>告诉Vim你需要绝对路径。
+这里也有许多别的修饰符可以用到。</p>
+<p>第三个命令显示了当前文件夹下的文件<code>foo.txt</code>的绝对路径，无论文件是否存在。(译注：试一下看看文件不存在的情况？)
+<code>fnamemodify()</code>是一个比<code>expand()</code>灵活多了的Vim函数，
+你可以指定任意文件名作为<code>fnamemodify()</code>的参数，而不仅仅是<code>expand()</code>所需要的那种特殊字符串。</p>
+<h2 id="_3">列出文件</h2>
+<p>你可能想要得到一个特定文件夹下的文件列表。执行下面的命令：</p>
 <pre class="codehilite"><code class="language-vim">:echo globpath('.', '*')</code></pre>
 
 
-<p>Vim will display all of the files and directories in the current directory.  The
-<code>globpath()</code> function returns a string, with each name separated by a newline.
-To get a list you'll need to <code>split()</code> it yourself.  Run this command:</p>
+<p>Vim将输出当前目录下所有的文件和文件夹。<code>globpath()</code>函数返回一个字符串，
+其中每一项都用换行符隔开。为了得到一个列表，你需要自己去<code>split()</code>。执行这个命令：</p>
 <pre class="codehilite"><code class="language-vim">:echo split(globpath('.', '*'), '\n')</code></pre>
 
 
-<p>This time Vim displays a Vimscript list containing each path.  If you've got
-newlines in your filenames you're on your own, sorry.</p>
-<p><code>globpath()</code>'s wildcards work mostly as you would expect.  Run the following
-command:</p>
+<p>这次Vim显示一个包括各个文件路径的Vimscript列表。
+如果你的文件名里包括了换行符，那就只能由你自己想办法了。</p>
+<p><code>globpath()</code>的通配符(wildcards)的工作方式就像你所想的一样。执行下面的命令：</p>
 <pre class="codehilite"><code class="language-vim">:echo split(globpath('.', '*.txt'), '\n')</code></pre>
 
 
-<p>Vim displays a list of all <code>.txt</code> files in the current directory.</p>
-<p>You can recursively list files with <code>**</code>.  Run this command:</p>
+<p>Vim显示一个当前文件夹下的所有<code>.txt</code>文件组成的列表。</p>
+<p>你可以用<code>**</code>递归地列出文件。执行这个命令：</p>
 <pre class="codehilite"><code class="language-vim">:echo split(globpath('.', '**'), '\n')</code></pre>
 
 
-<p>Vim will list all files and directories under the current directory.</p>
-<p><code>globpath()</code> is <em>extremely</em> powerful.  You'll learn more when you complete this
-chapter's exercises.</p>
-<h2 id="exercises">Exercises</h2>
-<p>Read <code>:help expand()</code>.</p>
-<p>Read <code>:help fnamemodify()</code>.</p>
-<p>Read <code>:help filename-modifiers</code>.</p>
-<p>Read <code>:help simplify()</code>.</p>
-<p>Read <code>:help resolve()</code>.</p>
-<p>Read <code>:help globpath()</code>.</p>
-<p>Read <code>:help wildcards</code>.</p></div>
+<p>Vim将列出当前文件夹下的所有文件及文件夹。</p>
+<p><code>globpath()</code><em>非常地</em>强大。在你完成本章练习后，你将学到更多内容。</p>
+<h2 id="_4">练习</h2>
+<p>阅读<code>:help expand()</code>.</p>
+<p>阅读<code>:help fnamemodify()</code>.</p>
+<p>阅读<code>:help filename-modifiers</code>.</p>
+<p>阅读<code>:help simplify()</code>.</p>
+<p>阅读<code>:help resolve()</code>.</p>
+<p>阅读<code>:help globpath()</code>.</p>
+<p>阅读<code>:help wildcards</code>.</p></div>
 
         <div class="prevnext">
             

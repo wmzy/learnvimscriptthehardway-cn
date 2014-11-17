@@ -84,8 +84,7 @@
 </ul><p>貌似这个映射的作用是“清除当前行”。但你可以试试。</p>
 <p>当你按下<code>dd</code>后，Vim就不动了。按下<code>&lt;c-c&gt;</code>才可以继续，但是你的文件中会多出许多
 空行！想想发生了什么？</p>
-<p>This mapping is actually <em>recursive</em>!  When you press <code>dd</code>, Vim says:
-这个映射实际上是 <em>递归</em> 的！当你按下<code>dd</code>后，Vim解释为：</p>
+<p>这个映射实际上是 <em>递归</em> 的！当你按下<code>dd</code>后，Vim解释为：</p>
 <ul><li><code>dd</code>存在映射，执行映射的内容。<ul><li>新建一行。</li>
 <li>退出insert模式。</li>
 <li>向下移动一行。</li>
@@ -120,7 +119,7 @@
 <p>答案是： <strong>任何时候</strong> 。</p>
 <p><strong>是的，没开玩笑， <em>任何时候</em> 。</strong></p>
 <p>在安装插件或添加新的自定义映射时使用<code>*map</code>系列命令纯属是给自己 <em>找</em> 麻烦。
-多敲几个字符以确保这个问题不会发生，救自己与火海。</p>
+多敲几个字符以确保这个问题不会发生，救自己于火海。</p>
 <h2 id="_5">练习</h2>
 <p>将之前章节中添加到<code>~/.vimrc</code>文件中的映射命令全部换成非递归版本。</p>
 <p>读帮助文档<code>:help unmap</code>。</p></div>
